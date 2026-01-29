@@ -13,6 +13,9 @@ from __future__ import annotations
 import argparse
 import secrets
 import string
+import sys
+
+import pyperclip
 
 
 DEFAULT_LENGTH = 12
@@ -103,6 +106,16 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     print(password)
+    # パスワードをクリップボードにコピーする。
+    # Linux など一部環境では、xclip/xsel 等が無いと失敗することがあるため、
+    # 失敗してもツール全体は落とさず、警告だけ表示する。
+    try:
+        pyperclip.copy(password)
+    except Exception as e:  # PyperclipException などをまとめて捕捉
+        print(f"クリップボードへのコピーに失敗しました: {e}", file=sys.stderr)
+    else:
+        print("クリップボードにコピーしました！")
+
     return 0
 
 
