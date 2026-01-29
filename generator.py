@@ -52,10 +52,26 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--symbols", dest="symbols", action="store_true", default=True, help="記号を含める")
     parser.add_argument("--no-symbols", dest="symbols", action="store_false", help="記号を含めない")
 
+    # 記号を安全な「-_」のみに制限するオプション
+    parser.add_argument(
+        "--safe-symbols",
+        dest="safe_symbols",
+        action="store_true",
+        help="記号を「-_」のみに制限する",
+    )
+
     return parser
 
 
-def generate_password(length: int, *, upper: bool, lower: bool, digits: bool, symbols: bool) -> str:
+def generate_password(
+    length: int,
+    *,
+    upper: bool,
+    lower: bool,
+    digits: bool,
+    symbols: bool,
+    safe_symbols: bool = False,
+) -> str:
     if length <= 0:
         raise ValueError("length は 1 以上にしてください。")
 
@@ -67,8 +83,10 @@ def generate_password(length: int, *, upper: bool, lower: bool, digits: bool, sy
     if digits:
         charsets.append(string.digits)
     if symbols:
+        # 記号セットを安全な「-_」のみに制限するか、通常の記号全体を使うかを切り替える。
+        symbol_chars = "-_" if safe_symbols else string.punctuation
         # `string.punctuation` は一般的な記号セットです（空白は含みません）。
-        charsets.append(string.punctuation)
+        charsets.append(symbol_chars)
 
     if not charsets:
         raise ValueError("少なくとも1種類（upper/lower/digits/symbols）を有効にしてください。")
@@ -100,6 +118,7 @@ def main(argv: list[str] | None = None) -> int:
             lower=args.lower,
             digits=args.digits,
             symbols=args.symbols,
+            safe_symbols=args.safe_symbols,
         )
     except ValueError as e:
         parser.error(str(e))
@@ -114,7 +133,7 @@ def main(argv: list[str] | None = None) -> int:
     except Exception as e:  # PyperclipException などをまとめて捕捉
         print(f"クリップボードへのコピーに失敗しました: {e}", file=sys.stderr)
     else:
-        print("クリップボードにコピーしました！")
+        print("コピーしました")
 
     return 0
 
