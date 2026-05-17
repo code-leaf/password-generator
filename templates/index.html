@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>パスワードジェネレーター</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        background: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .card {
+        background: white;
+        border-radius: 16px;
+        padding: 40px;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        font-size: 1.6rem;
+        color: #1a1a2e;
+        margin-bottom: 28px;
+        text-align: center;
+      }
+
+      .field {
+        margin-bottom: 20px;
+      }
+
+      label.field-label {
+        display: block;
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 6px;
+      }
+
+      input[type='number'] {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        outline: none;
+        transition: border 0.2s;
+      }
+
+      input[type='number']:focus {
+        border-color: #4f46e5;
+      }
+
+      .checkboxes {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 24px;
+      }
+
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+        color: #333;
+        cursor: pointer;
+      }
+
+      input[type='checkbox'] {
+        width: 18px;
+        height: 18px;
+        accent-color: #4f46e5;
+        cursor: pointer;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background: #4f46e5;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      button:hover {
+        background: #4338ca;
+      }
+
+      .result {
+        margin-top: 24px;
+        background: #f5f3ff;
+        border: 1px solid #c4b5fd;
+        border-radius: 8px;
+        padding: 16px;
+        text-align: center;
+      }
+
+      .result-label {
+        font-size: 0.8rem;
+        color: #7c3aed;
+        margin-bottom: 8px;
+      }
+
+      .result-password {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #1a1a2e;
+        word-break: break-all;
+        letter-spacing: 2px;
+      }
+
+      .error {
+        margin-top: 16px;
+        color: #dc2626;
+        font-size: 0.9rem;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>🔐 パスワードジェネレーター</h1>
+
+      <form method="POST">
+        <div class="field">
+          <label class="field-label">文字数</label>
+          <input type="number" name="length" value="12" min="1" max="128" />
+        </div>
+
+        <div class="checkboxes">
+          <label class="checkbox-item">
+            <input type="checkbox" name="upper" checked /> 大文字
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="lower" checked /> 小文字
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="digits" checked /> 数字
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="symbols" checked /> 記号
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="safe_symbols" /> 安全な記号のみ（-_）
+          </label>
+        </div>
+
+        <button type="submit">生成する</button>
+      </form>
+
+      {% if error %}
+      <p class="error">{{ error }}</p>
+      {% endif %} {% if password %}
+      <div class="result">
+        <div class="result-label">生成されたパスワード</div>
+        <div class="result-password">{{ password }}</div>
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>
